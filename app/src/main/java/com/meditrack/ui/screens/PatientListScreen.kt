@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.meditrack.Patient
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatientListScreen(
     patients: List<Patient>,
@@ -34,7 +35,7 @@ fun PatientListScreen(
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         )
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(1f)) {
             items(filtered) { p ->
                 Card(modifier = Modifier
                     .fillMaxWidth()

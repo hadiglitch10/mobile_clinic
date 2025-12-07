@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.meditrack.Appointment
 import com.meditrack.Patient
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppointmentListScreen(
     appointments: List<Appointment>,
@@ -24,7 +26,7 @@ fun AppointmentListScreen(
 
         Text("Today's & Upcoming", modifier = Modifier.padding(top = 8.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(1f)) {
             items(appointments) { a ->
                 val patientName = patients.firstOrNull { it.id == a.patientId }?.name ?: "Unknown"
                 Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {

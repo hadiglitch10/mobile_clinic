@@ -1,6 +1,8 @@
 package com.meditrack.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,7 +26,11 @@ fun AddEditPatientScreen(
 
     var nameError by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(12.dp)
+        .verticalScroll(rememberScrollState())
+    ) {
         Text(if (editing == null) "Add Patient" else "Edit Patient")
 
         OutlinedTextField(

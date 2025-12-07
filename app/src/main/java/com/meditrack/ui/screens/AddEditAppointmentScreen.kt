@@ -16,7 +16,6 @@ import com.meditrack.Patient
 @Composable
 fun AddEditAppointmentScreen(
     patients: List<Patient>,
-    appointments: List<Appointment>,
     onSave: (Appointment) -> Unit,
     onCancel: () -> Unit
 ) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.meditrack.ui.theme.MediTrackTheme
 import com.meditrack.ui.screens.*
 
@@ -16,15 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MediTrackTheme {
-                // App-level state (in-memory)
-                val patients = remember { mutableStateListOf<Patient>() }
-                val appointments = remember { mutableStateListOf<Appointment>() }
-
-                // seed sample data
-                if (patients.isEmpty()) {
-                    patients.add(Patient(id = 1L, name = "John Doe", age = 29, phone = "0100000000", email = "john@example.com", medicalHistory = "None"))
-                    appointments.add(Appointment(id = 1L, patientId = 1L, dateTime = "2025-12-10T10:00", purpose = "General Checkup"))
-                }
+                val viewModel: MainViewModel = viewModel()
+                val patients = viewModel.patients
+                val appointments = viewModel.appointments
 
                 var currentScreen by remember { mutableStateOf(Screen.Home) }
                 var selectedPatientId by remember { mutableStateOf<Long?>(null) }
@@ -65,9 +60,7 @@ class MainActivity : ComponentActivity() {
                     Screen.AddPatient -> AddEditPatientScreen(
                         patients = patients,
                         onSave = { newPatient ->
-                            // assign simple incremental id
-                            val nextId = (patients.maxOfOrNull { it.id } ?: 0L) + 1L
-                            patients.add(newPatient.copy(id = nextId))
+                            viewModel.addPatient(newPatient)
                             currentScreen = Screen.PatientList
                         },
                         onCancel = { currentScreen = Screen.PatientList },
@@ -76,8 +69,7 @@ class MainActivity : ComponentActivity() {
                     Screen.EditPatient -> AddEditPatientScreen(
                         patients = patients,
                         onSave = { updated ->
-                            val idx = patients.indexOfFirst { it.id == updated.id }
-                            if (idx >= 0) patients[idx] = updated
+                            viewModel.updatePatient(updated)
                             currentScreen = Screen.PatientDetail
                         },
                         onCancel = { currentScreen = Screen.PatientDetail },
@@ -85,10 +77,8 @@ class MainActivity : ComponentActivity() {
                     )
                     Screen.AddAppointment -> AddEditAppointmentScreen(
                         patients = patients,
-                        appointments = appointments,
                         onSave = { ap ->
-                            val nextId = (appointments.maxOfOrNull { it.id } ?: 0L) + 1L
-                            appointments.add(ap.copy(id = nextId))
+                            viewModel.addAppointment(ap)
                             currentScreen = Screen.Appointments
                         },
                         onCancel = { currentScreen = Screen.Appointments }
