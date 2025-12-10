@@ -2,18 +2,18 @@ package com.meditrack
 
 import android.app.Application
 import androidx.room.Room
-import com.meditrack.data.DB
+import com.meditrack.data.AppDatabase
 
 class AppContext : Application(){
     companion object {
-        lateinit var database : DB
+        lateinit var database : AppDatabase
     }
 
     override fun onCreate() {
         super.onCreate()
-        val db = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             applicationContext,
-            DB::class.java,
+            AppDatabase::class.java,
             "my_database"
         ).build()
     }

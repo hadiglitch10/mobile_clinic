@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meditrack.PatientServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-10T19:20:55" hostname="HADI" time="0.033">
+  <properties/>
+  <testcase name="addPatient_verifiesDaoCall" classname="com.meditrack.PatientServiceTest" time="0.03"/>
+  <testcase name="getAllPatients_returnsList" classname="com.meditrack.PatientServiceTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meditrack.AppointmentValidatorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-12-10T19:20:55" hostname="HADI" time="0.002">
+  <properties/>
+  <testcase name="isDateValid_validDate_returnsTrue" classname="com.meditrack.AppointmentValidatorTest" time="0.001"/>
+  <testcase name="isPurposeValid_emptyPurpose_returnsFalse" classname="com.meditrack.AppointmentValidatorTest" time="0.0"/>
+  <testcase name="isPurposeValid_nonEmptyPurpose_returnsTrue" classname="com.meditrack.AppointmentValidatorTest" time="0.001"/>
+  <testcase name="isDateValid_emptyDate_returnsFalse" classname="com.meditrack.AppointmentValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meditrack.PatientValidatorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-12-10T19:20:55" hostname="HADI" time="0.001">
+  <properties/>
+  <testcase name="isPatientAgeValid_zeroAge_returnsFalse" classname="com.meditrack.PatientValidatorTest" time="0.001"/>
+  <testcase name="isPatientNameValid_emptyName_returnsFalse" classname="com.meditrack.PatientValidatorTest" time="0.0"/>
+  <testcase name="isPatientAgeValid_negativeAge_returnsFalse" classname="com.meditrack.PatientValidatorTest" time="0.0"/>
+  <testcase name="isPatientNameValid_nonEmptyName_returnsTrue" classname="com.meditrack.PatientValidatorTest" time="0.0"/>
+  <testcase name="isPatientAgeValid_positiveAge_returnsTrue" classname="com.meditrack.PatientValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

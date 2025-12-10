@@ -1,23 +1,22 @@
 package com.meditrack.data.Daos
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.meditrack.data.entities.Appointment
-import com.meditrack.data.entities.Patient
+import com.meditrack.Patient
 
 @Dao
 interface PatientDao {
     @Insert
     suspend fun insertPatient(patient: Patient)
-    @Query("SELECT * from patients")
-    suspend fun getAllPatient() : List<Patient>
-    @Query("SELECT * from appointments")
-    suspend fun getSingleAppointment(patientId : Int,appointmentId : Int) : Appointment
+
+    @Query("SELECT * FROM patients")
+    suspend fun getAllPatient(): List<Patient>
+
     @Update
-    suspend fun updatePatient(patient:Patient)
-    @Delete
-    suspend fun deletePatient(patientId:Int)
+    suspend fun updatePatient(patient: Patient)
+
+    @Query("DELETE FROM patients WHERE id = :patientId")
+    suspend fun deletePatient(patientId: Long)
 }
