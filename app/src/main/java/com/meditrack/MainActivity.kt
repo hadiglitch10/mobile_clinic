@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.meditrack.ui.theme.MediTrackTheme
 import com.meditrack.ui.screens.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 enum class Screen {
     Home, PatientList, PatientDetail, Appointments, AddPatient, EditPatient, AddAppointment
@@ -14,13 +17,14 @@ enum class Screen {
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         setContent {
             MediTrackTheme {
                 val viewModel: MainViewModel = viewModel()
                 val patients = viewModel.patients
                 val appointments = viewModel.appointments
-
                 var currentScreen by remember { mutableStateOf(Screen.Home) }
                 var selectedPatientId by remember { mutableStateOf<Long?>(null) }
                 var editingPatientId by remember { mutableStateOf<Long?>(null) }
