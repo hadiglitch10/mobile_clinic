@@ -3,8 +3,8 @@ package com.meditrack.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.meditrack.Appointment
-import com.meditrack.Patient
+import com.meditrack.data.entities.Appointment
+import com.meditrack.data.entities.Patient
 import com.meditrack.data.Daos.AppointmentDao
 import com.meditrack.data.Daos.PatientDao
 

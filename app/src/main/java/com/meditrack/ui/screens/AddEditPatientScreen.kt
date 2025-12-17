@@ -9,7 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.meditrack.Patient
+import androidx.compose.ui.unit.dp
+import com.meditrack.data.entities.Patient
 
 @Composable
 fun AddEditPatientScreen(
@@ -73,14 +74,14 @@ fun AddEditPatientScreen(
             Button(onClick = {
                 nameError = name.isBlank()
                 if (!nameError) {
-                    val id = editing?.id ?: 0L
+                    val id = editing?.id ?: ""
                     val patient = Patient(
                         id = id,
                         name = name.trim(),
-                        age = ageStr.toIntOrNull(),
-                        phone = phone.trim().ifBlank { null },
-                        email = email.trim().ifBlank { null },
-                        medicalHistory = history.trim().ifBlank { null }
+                        age = ageStr.toIntOrNull() ?: 0,
+                        phone = phone.trim().ifBlank { "" },
+                        email = email.trim().ifBlank { "" },
+                        medicalHistory = history.trim().ifBlank { "" }
                     )
                     onSave(patient)
                 }

@@ -1,6 +1,8 @@
 package com.meditrack.data
 
 import androidx.room.TypeConverter
+import com.meditrack.data.entities.Appointment
+import com.meditrack.data.entities.Patient
 import java.sql.Timestamp
 
 class Converters {

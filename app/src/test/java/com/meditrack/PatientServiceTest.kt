@@ -1,5 +1,6 @@
 package com.meditrack
 
+import com.meditrack.data.entities.Patient
 import com.meditrack.data.Daos.PatientDao
 import org.junit.Assert.*
 import org.junit.Before
@@ -26,7 +27,7 @@ class PatientServiceTest {
 
     @Test
     fun addPatient_verifiesDaoCall() = runTest {
-        val patient = Patient(id = 1, name = "John Doe", age = 30, phone = "123", email = "test@test.com", medicalHistory = "None")
+        val patient = Patient(id = "1", name = "John Doe", age = 30, phone = "123", email = "test@test.com", medicalHistory = "None")
         
         patientService.addPatient(patient)
         
@@ -36,8 +37,8 @@ class PatientServiceTest {
     @Test
     fun getAllPatients_returnsList() = runTest {
         val expectedList = listOf(
-            Patient(id = 1, name = "John", age = 30, phone = "123", email = "a@a.com", medicalHistory = "None"),
-            Patient(id = 2, name = "Jane", age = 25, phone = "456", email = "b@b.com", medicalHistory = "Asthma")
+            Patient(id = "1", name = "John", age = 30, phone = "123", email = "a@a.com", medicalHistory = "None"),
+            Patient(id = "2", name = "Jane", age = 25, phone = "456", email = "b@b.com", medicalHistory = "Asthma")
         )
         
         `when`(patientDao.getAllPatient()).thenReturn(expectedList)

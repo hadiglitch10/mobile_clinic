@@ -1,38 +1,134 @@
 package com.meditrack
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FirebaseFirestore
+import com.meditrack.data.AppDatabase
+import com.meditrack.data.AuthRepository
+import com.meditrack.data.AppointmentRepository
+import com.meditrack.data.PatientRepository
+import com.meditrack.data.entities.Appointment
+import com.meditrack.data.entities.Patient
+import com.meditrack.data.UserPreferencesRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import androidx.room.Room
+import com.google.firebase.auth.FirebaseUser
 
-class MainViewModel : ViewModel() {
-    // App-level state (in-memory, survives configuration changes)
-    private val _patients = mutableStateListOf<Patient>()
-    val patients: List<Patient> get() = _patients
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    
+    // Database initialization (Manual DI for simplicity)
+    private val db = Room.databaseBuilder(
+        application,
+        AppDatabase::class.java, "meditrack-db"
+    )
+    .fallbackToDestructiveMigration()
+    .build()
 
-    private val _appointments = mutableStateListOf<Appointment>()
-    val appointments: List<Appointment> get() = _appointments
+    private val firestore = FirebaseFirestore.getInstance()
 
-    init {
-        // seed sample data
-        if (_patients.isEmpty()) {
-            _patients.add(Patient(id = 1L, name = "John Doe", age = 29, phone = "0100000000", email = "john@example.com", medicalHistory = "None"))
-            _appointments.add(Appointment(id = 1L, patientId = 1L, dateTime = "2025-12-10T10:00", purpose = "General Checkup"))
+    private val authRepository = AuthRepository()
+    private val patientRepository = PatientRepository(db.patientDao(), firestore)
+    private val appointmentRepository = AppointmentRepository(db.appointmentDao(), firestore)
+
+    // Exposed Flows
+    val patients: StateFlow<List<Patient>> = patientRepository.getAllPatients()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val appointments: StateFlow<List<Appointment>> = appointmentRepository.getAllAppointments()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    // User Preferences
+    private val userPreferencesRepository = UserPreferencesRepository(application)
+
+    val clinicName: StateFlow<String> = userPreferencesRepository.clinicName
+        .stateIn(viewModelScope, SharingStarted.Lazily, "My Clinic")
+
+    val notificationsEnabled: StateFlow<Boolean> = userPreferencesRepository.notificationsEnabled
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
+
+    val isDarkTheme: StateFlow<Boolean> = userPreferencesRepository.isDarkTheme
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    fun updateClinicName(name: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveClinicName(name)
         }
     }
 
+    fun updateNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveNotificationsEnabled(enabled)
+        }
+    }
+
+    fun updateTheme(isDark: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveThemePreference(isDark)
+        }
+    }
+
+    // Auth
+    val currentUser: FirebaseUser?
+        get() = authRepository.currentUser
+
+    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+        viewModelScope.launch {
+            val result = authRepository.login(email, password)
+            if (result.isSuccess) {
+                onResult(true, null)
+            } else {
+                onResult(false, result.exceptionOrNull()?.message)
+            }
+        }
+    }
+
+    fun register(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+        viewModelScope.launch {
+            val result = authRepository.register(email, password)
+            if (result.isSuccess) {
+                onResult(true, null)
+            } else {
+                onResult(false, result.exceptionOrNull()?.message)
+            }
+        }
+    }
+    
+    fun logout() {
+        authRepository.logout()
+    }
+
+    // Data Operations
     fun addPatient(patient: Patient) {
-        val nextId = (_patients.maxOfOrNull { it.id } ?: 0L) + 1L
-        _patients.add(patient.copy(id = nextId))
+        viewModelScope.launch {
+            patientRepository.addPatient(patient)
+        }
     }
 
     fun updatePatient(patient: Patient) {
-        val idx = _patients.indexOfFirst { it.id == patient.id }
-        if (idx >= 0) {
-            _patients[idx] = patient
+        viewModelScope.launch {
+            patientRepository.updatePatient(patient)
+        }
+    }
+    
+    fun deletePatient(patientId: String) {
+        viewModelScope.launch {
+            patientRepository.deletePatient(patientId)
         }
     }
 
     fun addAppointment(appointment: Appointment) {
-        val nextId = (_appointments.maxOfOrNull { it.id } ?: 0L) + 1L
-        _appointments.add(appointment.copy(id = nextId))
+        viewModelScope.launch {
+            appointmentRepository.addAppointment(appointment)
+        }
+    }
+    
+    fun deleteAppointment(appointmentId: String) {
+        viewModelScope.launch {
+            appointmentRepository.deleteAppointment(appointmentId)
+        }
     }
 }

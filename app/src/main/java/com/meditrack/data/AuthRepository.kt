@@ -4,48 +4,39 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
-interface AuthRepository {
-    val currentUser: FirebaseUser?
-    suspend fun signIn(email: String, pass: String): Result<FirebaseUser>
-    suspend fun signUp(email: String, pass: String): Result<FirebaseUser>
-    fun signOut()
-}
-
-class AuthRepositoryImpl : AuthRepository {
+class AuthRepository {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    override val currentUser: FirebaseUser?
+    val currentUser: FirebaseUser?
         get() = auth.currentUser
 
-    override suspend fun signIn(email: String, pass: String): Result<FirebaseUser> {
+    suspend fun login(email: String, password: String): Result<FirebaseUser> {
         return try {
-            val result = auth.signInWithEmailAndPassword(email, pass).await()
-            val user = result.user
-            if (user != null) {
-                Result.success(user)
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            if (result.user != null) {
+                Result.success(result.user!!)
             } else {
-                Result.failure(Exception("User is null after sign in"))
+                Result.failure(Exception("Login successful but user is null"))
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun signUp(email: String, pass: String): Result<FirebaseUser> {
+    suspend fun register(email: String, password: String): Result<FirebaseUser> {
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, pass).await()
-            val user = result.user
-            if (user != null) {
-                Result.success(user)
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            if (result.user != null) {
+                Result.success(result.user!!)
             } else {
-                Result.failure(Exception("User is null after sign up"))
+                Result.failure(Exception("Registration successful but user is null"))
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override fun signOut() {
+    fun logout() {
         auth.signOut()
     }
 }

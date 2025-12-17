@@ -8,7 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.meditrack.Patient
+import androidx.compose.ui.unit.dp
+import com.meditrack.data.entities.Patient
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -16,7 +17,7 @@ fun PatientListScreen(
     patients: List<Patient>,
     onBack: () -> Unit,
     onAddPatient: () -> Unit,
-    onPatientClick: (Long) -> Unit
+    onPatientClick: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     val filtered = if (query.isBlank()) patients else patients.filter {
