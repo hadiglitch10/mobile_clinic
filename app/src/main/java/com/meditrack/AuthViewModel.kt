@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.meditrack.data.AuthRepository
-import com.meditrack.data.AuthRepositoryImpl
+
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
-    private val repository: AuthRepository = AuthRepositoryImpl()
+    private val repository: AuthRepository = AuthRepository()
 
     var currentUser by mutableStateOf<FirebaseUser?>(null)
         private set
@@ -22,7 +22,7 @@ class AuthViewModel : ViewModel() {
 
     fun login(email: String, pass: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val result = repository.signIn(email, pass)
+            val result = repository.login(email, pass)
             if (result.isSuccess) {
                 currentUser = result.getOrNull()
                 onSuccess()
@@ -34,7 +34,7 @@ class AuthViewModel : ViewModel() {
 
     fun register(email: String, pass: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val result = repository.signUp(email, pass)
+            val result = repository.register(email, pass)
             if (result.isSuccess) {
                 currentUser = result.getOrNull()
                 onSuccess()
@@ -45,7 +45,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun signOut() {
-        repository.signOut()
+        repository.logout()
         currentUser = null
     }
 }
